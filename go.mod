@@ -1,4 +1,4 @@
-module github.com/openimsdk/gomake
+module github.com/mrwenhui/gomake
 
 go 1.21.2
 
