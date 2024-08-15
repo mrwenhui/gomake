@@ -24,16 +24,16 @@ func StartBinaries() error {
 		binFullPath := filepath.Join(OpenIMOutputHostBin, binary)
 		for i := 0; i < count; i++ {
 			args := []string{
-				"dlv",
 				"--listen=:" + strconv.Itoa(dlvPort),
 				"--headless=true",
 				"--api-version=2",
 				"--accept-multiclient",
 				"exec",
 				binFullPath,
+				"--",
 				"-i", strconv.Itoa(i),
 				"-c", OpenIMOutputConfig}
-			cmd := exec.Command(binFullPath, args...)
+			cmd := exec.Command("dlv", args...)
 			fmt.Printf("Starting %s\n", cmd.String())
 			cmd.Dir = OpenIMOutputHostBin
 			cmd.Stdout = os.Stdout
