@@ -173,7 +173,7 @@ func compileDir(sourceDir, outputBase, platform string) []string {
 			}
 
 			PrintBlue(fmt.Sprintf("Compiling dir: %s for platform: %s binary: %s ...", dirName, platform, outputFileName))
-			err := sh.RunWith(map[string]string{"GOOS": targetOS, "GOARCH": targetArch}, "go", "build", "-o", filepath.Join(outputDir, outputFileName), filepath.Join(dir, "main.go"))
+			err := sh.RunWith(map[string]string{"GOOS": targetOS, "GOARCH": targetArch}, "go", "build", "-gcflags \"all=-N -l\"", "-o", filepath.Join(outputDir, outputFileName), filepath.Join(dir, "main.go"))
 			if err != nil {
 				errors <- fmt.Errorf("failed to compile %s for %s: %v", dirName, platform, err)
 				PrintRed("Compilation aborted. " + fmt.Sprintf("failed to compile %s for %s: %v", dirName, platform, err))

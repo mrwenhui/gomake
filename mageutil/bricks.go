@@ -19,10 +19,20 @@ func StopBinaries() {
 
 // StartBinaries Start all binary services.
 func StartBinaries() error {
+	dlvPort := 2345
 	for binary, count := range serviceBinaries {
 		binFullPath := filepath.Join(OpenIMOutputHostBin, binary)
 		for i := 0; i < count; i++ {
-			args := []string{"-i", strconv.Itoa(i), "-c", OpenIMOutputConfig}
+			args := []string{
+				"dlv",
+				"--listen=:" + strconv.Itoa(dlvPort),
+				"--headless=true",
+				"--api-version=2",
+				"--accept-multiclient",
+				"exec",
+				binFullPath,
+				"-i", strconv.Itoa(i),
+				"-c", OpenIMOutputConfig}
 			cmd := exec.Command(binFullPath, args...)
 			fmt.Printf("Starting %s\n", cmd.String())
 			cmd.Dir = OpenIMOutputHostBin
@@ -31,6 +41,7 @@ func StartBinaries() error {
 			if err := cmd.Start(); err != nil {
 				return fmt.Errorf("failed to start %s with args %v: %v", binFullPath, args, err)
 			}
+			dlvPort++
 		}
 	}
 	return nil
